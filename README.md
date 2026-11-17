@@ -12,10 +12,9 @@ Code and data for the HW2 paper. We test whether a small LLM corrects or maintai
 - Models: `llama3.2:3b`, `qwen2.5:3b` (pulled with `ollama pull`)
 - Python packages: see `requirements.txt` (`pip install -r requirements.txt`)
 
-Model identifiers (`ollama list`): 
-NAME           ID              SIZE      MODIFIED      
-qwen2.5:3b     357c53fb659c    1.9 GB    2 minutes ago    
-llama3.2:3b    a80c4f17acd5    2.0 GB    2 minutes ago    
+Model identifiers (`ollama list`):
+- llama3.2:3b — ID a80c4f17acd5 (2.0 GB)
+- qwen2.5:3b — ID 357c53fb659c (1.9 GB)
 
 ## Random seeds and decoding
 
