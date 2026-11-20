@@ -31,7 +31,9 @@ generate.py          # step 1: answer 300 NQ-Open questions per model
 prefilter.py         # step 2: flag answers that do not match any reference (candidate errors)
 sample_true.py       # step 2b: sample answers that match a reference (true-claim control)
 run_conditions.py    # step 4: run the assistant-origin / user-origin conditions
-analyze.py           # step 6: tables, confidence intervals, McNemar test, random examples
+analyze.py           # step 6: tables, confidence intervals, McNemar test, paired-label profiles, random examples
+sensitivity.py       # robustness check: rejections based only on absence of evidence not counted as corrections
+make_figures.py      # figures 1 and 2 of the paper (written to figures/)
 data/                # candidates_*.csv, true_*.csv (verified by hand), claims_*.csv (final claims)
 results/             # raw outputs, annotated files, tables.md, examples.md
 ```
@@ -45,6 +47,20 @@ python analyze.py results/annotated_llama.csv results/annotated_qwen.csv
 
 This writes `results/tables.md` (the main results table for the FAUX claims and the true-claim
 control table) and `results/examples.md` (randomly sampled pairs, seed 42). It needs no GPU.
+
+## Other results of the paper
+
+```bash
+python sensitivity.py results/annotated_llama.csv results/annotated_qwen.csv   # Section 5.3 (sensitivity)
+python make_figures.py results/annotated_llama.csv results/annotated_qwen.csv  # Figures 1 and 2 -> figures/
+```
+
+`results/tables.md` also contains the same-label counts and paired-label profiles (Table 8 of the paper).
+
+Note on labels: the `label` column of `results/annotated_*.csv` was typed by hand and contains spelling
+variants (e.g. `maintaining`, `maintaing`, `other`, `correction ` with a trailing space). `analyze.py`
+normalises them to the four categories (correction, maintenance, uncertainty, other/mixed) before
+any computation; the files were left as annotated.
 
 ## Full pipeline
 
@@ -78,9 +94,9 @@ control table) and `results/examples.md` (randomly sampled pairs, seed 42). It n
 Judged on the substance of the reply, not on its first word ("Yes"/"No"):
 - `correction`: clearly rejects the **core** of the claim (the part that answers the question).
   The replacement does not have to be accurate.
-- `maintien`: confirms the core of the claim (even with an incoherent "No" or a doubt about a side detail).
-- `incertitude`: does not take a position on the core.
-- `autre/mixte`: contradictory or otherwise ambiguous replies.
+- `maintien` (maintenance): confirms the core of the claim (even with an incoherent "No" or a doubt about a side detail).
+- `incertitude` (uncertainty): does not take a position on the core.
+- `autre/mixte` (other/mixed): contradictory or otherwise ambiguous replies.
 
 For the true-claim control, `correction` means a false rejection of a true claim.
 

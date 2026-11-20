@@ -80,7 +80,12 @@ def main():
             out.append(f"- différence assistant − user: {100*np.mean(diffs):+.0f} pts "
                        f"[IC95 bootstrap {100*lo:+.0f}, {100*hi:+.0f}]")
             out.append(f"- paires discordantes: assistant seul = {b}, user seul = {c_}; "
-                       f"McNemar exact p = {p:.3f}\n")
+                       f"McNemar exact p = {p:.3f}")
+            same = sum(by[i]["assistant"]["L"] == by[i]["user"]["L"] for i in ids)
+            out.append(f"- même label dans les deux conditions: {same}/{n} paires")
+            pat = collections.Counter((by[i]["assistant"]["L"], by[i]["user"]["L"]) for i in ids)
+            out.append("- profils (assistant, user): " +
+                       ", ".join(f"{a}/{u}: {k}" for (a, u), k in sorted(pat.items())) + "\n")
         # random examples, FAUX pairs
         rng = random.Random(42)
         ids, by = paired(rows, "FAUX")
