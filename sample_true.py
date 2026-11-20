@@ -1,4 +1,3 @@
-%%writefile sample_true.py
 import json, re, string, sys, csv, random
 
 def norm(s):
