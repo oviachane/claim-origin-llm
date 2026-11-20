@@ -70,8 +70,12 @@ any computation; the files were left as annotated.
    python generate.py --model qwen2.5:3b  --n 300 --out results/gen_qwen.jsonl
    ```
    Questions: NQ-Open validation split (`google-research-datasets/nq_open`), 300 sampled with seed 42.
-2. **Pre-filter**: `prefilter.py` writes the candidate errors (167 for Llama, 233 for Qwen);
+2. **Pre-filter**: `prefilter.py` writes the candidate errors (167 for Llama, 233 for Qwen):
+   `python prefilter.py results/gen_<m>.jsonl data/candidates_<m>.csv`;
    `sample_true.py results/gen_<m>.jsonl data/true_<m>.csv 30` samples the true-claim control.
+   Note: both commands write the empty verification columns. The files in `data/` already contain
+   our manual verification, so to re-run these steps write to another path (e.g. `/tmp/`)
+   instead of overwriting them.
 3. **Manual verification** (not automatable). Each claim was checked against a web source;
    `verdict` (FAUX / VRAI / EXCLU), `source`, `topic` and `rationale` are stored in `data/`.
    The filtered final sets are `data/claims_llama.csv` and `data/claims_qwen.csv`
